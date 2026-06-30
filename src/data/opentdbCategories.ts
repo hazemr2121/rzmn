@@ -1,0 +1,136 @@
+import type { Category } from "../types";
+
+export const OPENTDB_CATEGORIES: Category[] = [
+  {
+    id: "otdb_general", name: "General Knowledge", emoji: "💡",
+    grad: "linear-gradient(135deg,#0a2a1a,#051a0d)",
+    imageUrl: "https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 9,
+  },
+  {
+    id: "otdb_books", name: "Books", emoji: "📚",
+    grad: "linear-gradient(135deg,#1a0a0a,#0d0505)",
+    imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 10,
+  },
+  {
+    id: "otdb_film", name: "Film", emoji: "🎥",
+    grad: "linear-gradient(135deg,#3a1a0a,#200e05)",
+    imageUrl: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 11,
+  },
+  {
+    id: "otdb_music", name: "Music", emoji: "🎵",
+    grad: "linear-gradient(135deg,#2a0a2a,#160516)",
+    imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 12,
+  },
+  {
+    id: "otdb_tv", name: "Television", emoji: "📺",
+    grad: "linear-gradient(135deg,#1a1a2a,#0d0d16)",
+    imageUrl: "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 14,
+  },
+  {
+    id: "otdb_videogames", name: "Video Games", emoji: "🎮",
+    grad: "linear-gradient(135deg,#0a2a1a,#051a0d)",
+    imageUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 15,
+  },
+  {
+    id: "otdb_science", name: "Science & Nature", emoji: "🔬",
+    grad: "linear-gradient(135deg,#0a1a2a,#05101a)",
+    imageUrl: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 17,
+  },
+  {
+    id: "otdb_computers", name: "Computers", emoji: "💻",
+    grad: "linear-gradient(135deg,#0a2a1a,#051a0d)",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 18,
+  },
+  {
+    id: "otdb_mathematics", name: "Mathematics", emoji: "📐",
+    grad: "linear-gradient(135deg,#1a0a2a,#0d0516)",
+    imageUrl: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 19,
+  },
+  {
+    id: "otdb_mythology", name: "Mythology", emoji: "⚡",
+    grad: "linear-gradient(135deg,#2a1a0a,#160d05)",
+    imageUrl: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 20,
+  },
+  {
+    id: "otdb_sports", name: "Sports", emoji: "🏅",
+    grad: "linear-gradient(135deg,#1a0a2a,#0d0516)",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 21,
+  },
+  {
+    id: "otdb_geography", name: "Geography", emoji: "🌍",
+    grad: "linear-gradient(135deg,#0a2a3a,#051622)",
+    imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 22,
+  },
+  {
+    id: "otdb_history", name: "History", emoji: "🏛️",
+    grad: "linear-gradient(135deg,#2a1a0a,#160d05)",
+    imageUrl: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 23,
+  },
+  {
+    id: "otdb_politics", name: "Politics", emoji: "🏛️",
+    grad: "linear-gradient(135deg,#1a1a2a,#0d0d16)",
+    imageUrl: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 24,
+  },
+  {
+    id: "otdb_art", name: "Art", emoji: "🎨",
+    grad: "linear-gradient(135deg,#2a0a1a,#160510)",
+    imageUrl: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 25,
+  },
+  {
+    id: "otdb_celebrities", name: "Celebrities", emoji: "⭐",
+    grad: "linear-gradient(135deg,#2a2a0a,#161605)",
+    imageUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 26,
+  },
+  {
+    id: "otdb_animals", name: "Animals", emoji: "🐾",
+    grad: "linear-gradient(135deg,#0a2a0a,#051605)",
+    imageUrl: "https://images.unsplash.com/photo-1474511320723-9a56873571b7?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 27,
+  },
+  {
+    id: "otdb_vehicles", name: "Vehicles", emoji: "🚗",
+    grad: "linear-gradient(135deg,#1a2a2a,#0d1616)",
+    imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 28,
+  },
+  {
+    id: "otdb_comics", name: "Comics", emoji: "💬",
+    grad: "linear-gradient(135deg,#2a0a2a,#160516)",
+    imageUrl: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 29,
+  },
+  {
+    id: "otdb_gadgets", name: "Gadgets", emoji: "📱",
+    grad: "linear-gradient(135deg,#0a1a2a,#05101a)",
+    imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 30,
+  },
+  {
+    id: "otdb_anime", name: "Anime & Manga", emoji: "🎌",
+    grad: "linear-gradient(135deg,#3a0a1a,#1a0510)",
+    imageUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 31,
+  },
+  {
+    id: "otdb_cartoon", name: "Cartoon & Animation", emoji: "🎬",
+    grad: "linear-gradient(135deg,#1a2a3a,#0d1520)",
+    imageUrl: "https://images.unsplash.com/photo-1605979257913-1704eb7b6246?auto=format&fit=crop&w=900&q=60",
+    source: "opentdb", apiCategoryId: 32,
+  },
+];
