@@ -110,8 +110,8 @@ const CSS = `
   .bl-cell:hover:not(:disabled) { transform:scale(1.08); filter:brightness(1.3); }
   .bl-cell.used { cursor:not-allowed !important; transform:none !important; filter:none !important; }
 
-  /* Desktop cell size */
-  .bl-cell { font-size:14px; padding:7px 2px; }
+  /* Board value tile size */
+  .bl-cell { font-size:26px; padding:14px 4px; border-radius:9px; }
 
   /* Desktop cat image */
   .bl-cat-img { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; flex-shrink:0; }
@@ -228,6 +228,39 @@ const CSS = `
   }
   .bl-mob-pu-btn:disabled { opacity:.32; cursor:not-allowed; }
 
+  /* ══════════════ SCOREBOARD (desktop top) ══════════════ */
+  .bl-scorebar { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:12px 16px 2px; max-width:1280px; margin:0 auto; width:100%; }
+  .bl-sb-team { display:flex; align-items:center; gap:14px; border-radius:16px; padding:12px 18px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:border-color .3s, background .3s, box-shadow .3s; }
+  .bl-sb-team.on { border-color:rgba(240,192,64,0.55); background:rgba(240,192,64,0.07); box-shadow:0 0 30px rgba(240,192,64,0.12); }
+  .bl-sb-team:last-child { flex-direction:row-reverse; }
+  .bl-sb-score { font-family:'Bebas Neue',sans-serif; font-size:48px; line-height:.85; color:#fff; min-width:64px; text-align:center; }
+  .bl-sb-team.on .bl-sb-score { color:var(--accent); }
+  .bl-sb-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+  .bl-sb-team:last-child .bl-sb-info { align-items:flex-start; }
+  .bl-sb-label { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  .bl-sb-name { font-size:17px; font-weight:800; color:#e8f0ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .bl-sb-pus { display:flex; gap:6px; margin-top:2px; }
+  .bl-sb-pu { padding:6px 10px; border-radius:9px; font-size:11px; font-weight:800; border:1px solid; transition:all .2s; white-space:nowrap; }
+  .bl-sb-pu:disabled { opacity:.32; cursor:not-allowed; }
+
+  /* ══════════════ TRIVIA BOARD GRID ══════════════ */
+  .bl-board2 { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; padding:8px 16px 22px; max-width:1280px; margin:0 auto; width:100%; }
+  .bl-col { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .bl-col-head { position:relative; aspect-ratio:5/3; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:flex-end; justify-content:center; }
+  .bl-col-head img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .bl-ch-ov { position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,12,20,0.1) 0%,rgba(8,12,20,0.92) 80%); }
+  .bl-ch-lbl { position:relative; padding:7px 6px 9px; text-align:center; width:100%; }
+  .bl-ch-em { font-size:20px; display:block; line-height:1; }
+  .bl-ch-nm { font-size:13px; font-weight:800; color:#fff; margin-top:3px; line-height:1.2; text-shadow:0 1px 6px rgba(0,0,0,0.7); }
+
+  @media (max-width:1024px){ .bl-board2 { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  @media (max-width:699px){
+    .bl-scorebar { display:none; }
+    .bl-board2 { grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; padding:8px 8px 124px; }
+    .bl-ch-nm { font-size:11px; }
+    .bl-cell { font-size:20px; padding:11px 3px; }
+  }
+
   /* ══════════════ QUESTION / REVEAL ══════════════ */
   .bl-q-wrap {
     min-height:100vh; background:var(--bg);
@@ -331,6 +364,9 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
 
   // Seconds on the clock per question — hard (900 pts) gets more time.
   const questionTime = (diff: Difficulty) => (diff === "hard" ? 90 : 60);
+
+  // Board tile rows per category column, top→bottom: easy×2, medium×2, hard×2.
+  const VALUE_ROWS = diffs.flatMap(d => [[d, 0], [d, 1]] as [Difficulty, number][]);
 
   const [scores, setScores]           = useState<Scores>({ team1: 0, team2: 0 });
   const [currentTeam, setCurrentTeam] = useState<1 | 2>(1);
@@ -559,38 +595,16 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
     );
   };
 
-  /* ── Mobile cell ── */
-  const renderMobCell = (catId: string, diff: Difficulty, slot: number) => {
-    const used = isUsed(catId, diff, slot);
-    const fetchKey = `${catId}_${diff}`;
-    const isLoading = fetchingCells.has(fetchKey);
-
-    return (
-      <button key={`m-${catId}-${diff}-${slot}`} disabled={used}
-        onClick={() => !used && pickQuestion(catId, diff, slot)}
-        className={`bl-mob-cell${used ? " used" : ""}`}
-        style={{
-          borderColor: used ? "rgba(255,255,255,0.06)" : isLoading ? "rgba(240,192,64,0.5)" : `${DIFF_COLOR[diff]}70`,
-          color:       used ? "rgba(255,255,255,0.15)" : isLoading ? "var(--accent)" : DIFF_COLOR[diff],
-          background:  used ? "rgba(0,0,0,0.45)" : isLoading ? "rgba(240,192,64,0.1)" : "rgba(255,255,255,0.05)",
-          opacity: used ? 1 : 1,
-        }}
-      >
-        {used ? "✓" : isLoading ? "..." : POINTS[diff]}
-      </button>
-    );
-  };
-
-  /* ── Desktop power-ups ── */
-  const renderPUs = (teamKey: "team1" | "team2", isActive: boolean) => (
-    <div className="bl-pu">
+  /* ── Scoreboard power-ups (horizontal) ── */
+  const renderSbPUs = (teamKey: "team1" | "team2", isActive: boolean) => (
+    <div className="bl-sb-pus">
       {[
-        { key: "double",     label: "⚡ Double",  color: "#f0c040", bg: "rgba(240,192,64,0.15)",  border: "rgba(240,192,64,0.4)"  },
+        { key: "double",     label: "⚡ دبل",     color: "#f0c040", bg: "rgba(240,192,64,0.15)",  border: "rgba(240,192,64,0.4)"  },
         { key: "twoAnswers", label: "💡 إجابتين", color: "#22c97a", bg: "rgba(34,201,122,0.12)", border: "rgba(34,201,122,0.35)" },
       ].map(({ key, label, color, bg, border }) => {
         const avail = powerUps[teamKey][key as "double" | "twoAnswers"];
         return (
-          <button key={key} className="bl-pu-btn" disabled={!isActive || !avail}
+          <button key={key} className="bl-sb-pu" disabled={!isActive || !avail}
             onClick={() => {
               if (!isActive || !avail) return;
               if (key === "double")     { setPowerUps(p => ({ ...p, [teamKey]: { ...p[teamKey], double: false } }));     setDoubleActive(true); }
@@ -629,99 +643,34 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
           <span className="bl-logo">BRAIN LEAGUE</span>
         </div>
 
-        {/* ══ DESKTOP: teams on sides, categories center ══ */}
-        <div className="bl-board-grid">
-          <div className="bl-side">
-            {([1] as (1 | 2)[]).map(t => {
-              const isOn    = currentTeam === t;
-              const teamKey = t === 1 ? "team1" : "team2";
-              const name    = t === 1 ? config.team1 : config.team2;
-              const score   = t === 1 ? scores.team1  : scores.team2;
-              return (
-                <div key={t} className={`bl-team${isOn ? " on" : ""}`}>
-                  <div className="bl-t-label">الفريق {t}</div>
-                  <div className="bl-t-name">{name}</div>
-                  <div className="bl-t-score">{score}</div>
-                  {isOn && <div className="bl-dot" />}
-                  {renderPUs(teamKey, isOn)}
+        {/* ══ SCOREBOARD (desktop top; hidden on mobile, see bottom bar) ══ */}
+        <div className="bl-scorebar">
+          {([1, 2] as const).map(t => {
+            const isOn    = currentTeam === t;
+            const teamKey = t === 1 ? "team1" : "team2";
+            const name    = t === 1 ? config.team1 : config.team2;
+            const score   = t === 1 ? scores.team1  : scores.team2;
+            return (
+              <div key={t} className={`bl-sb-team${isOn ? " on" : ""}`}>
+                <div className="bl-sb-score">{score}</div>
+                <div className="bl-sb-info">
+                  <div className="bl-sb-label">الفريق {t}{isOn ? " • دورهم ⭐" : ""}</div>
+                  <div className="bl-sb-name">{name}</div>
+                  {renderSbPUs(teamKey, isOn)}
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="bl-cats-desk">
-            {config.sharedCats.map(cat => {
-              const fullCat = getCategoryData(cat);
-              if (!fullCat) return null;
-              return (
-                <div className="bl-card-desk" key={cat.id}>
-                  <div className="bl-pt-row">
-                    {renderCell(cat.id, "easy", 0)}
-                    {renderCell(cat.id, "easy", 1)}
-                  </div>
-                  <div className="bl-cat-img">
-                    {fullCat.imageUrl ? (
-                      <img src={fullCat.imageUrl} alt={fullCat.name}
-                        onError={e => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                          const fb = (e.target as HTMLImageElement).nextElementSibling as HTMLElement | null;
-                          if (fb) fb.style.opacity = "1";
-                        }}
-                      />
-                    ) : null}
-                    <div style={{ position:"absolute", inset:0, background: fullCat.grad, opacity: fullCat.imageUrl ? 0 : 1, transition:"opacity .3s" }} />
-                    <div className="bl-cat-ov" />
-                    <div className="bl-cat-label">
-                      <span className="bl-cat-emoji-d">{fullCat.emoji}</span>
-                      <div className="bl-cat-name-d">{fullCat.name}</div>
-                    </div>
-                  </div>
-                  <div className="bl-pt-row">
-                    {renderCell(cat.id, "medium", 0)}
-                    {renderCell(cat.id, "medium", 1)}
-                  </div>
-                  <div className="bl-pt-row">
-                    {renderCell(cat.id, "hard", 0)}
-                    {renderCell(cat.id, "hard", 1)}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="bl-side">
-            {([2] as (1 | 2)[]).map(t => {
-              const isOn    = currentTeam === t;
-              const teamKey = t === 1 ? "team1" : "team2";
-              const name    = t === 1 ? config.team1 : config.team2;
-              const score   = t === 1 ? scores.team1  : scores.team2;
-              return (
-                <div key={t} className={`bl-team${isOn ? " on" : ""}`}>
-                  <div className="bl-t-label">الفريق {t}</div>
-                  <div className="bl-t-name">{name}</div>
-                  <div className="bl-t-score">{score}</div>
-                  {isOn && <div className="bl-dot" />}
-                  {renderPUs(teamKey, isOn)}
-                </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* ══ MOBILE: rkz-style — big cards with side buttons ══ */}
-        <div className="bl-mob-cats">
+        {/* ══ BOARD: each category is a column — header on top, point tiles stacked easy→hard ══ */}
+        <div className="bl-board2">
           {config.sharedCats.map(cat => {
             const fullCat = getCategoryData(cat);
             if (!fullCat) return null;
             return (
-              <div className="bl-mob-card" key={cat.id}>
-                {/* Left column: easy(0) + medium(0) + hard(0) */}
-                <div className="bl-mob-col">
-                  {diffs.map(d => renderMobCell(cat.id, d, 0))}
-                </div>
-
-                {/* Centre: image + name */}
-                <div className="bl-mob-img">
+              <div className="bl-col" key={cat.id}>
+                <div className="bl-col-head">
                   {fullCat.imageUrl ? (
                     <img src={fullCat.imageUrl} alt={fullCat.name}
                       onError={e => {
@@ -731,18 +680,14 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
                       }}
                     />
                   ) : null}
-                  <div style={{ position:"absolute", inset:0, background: fullCat.grad, opacity: fullCat.imageUrl ? 0 : 1 }} />
-                  <div className="bl-mob-ov" />
-                  <div className="bl-mob-label">
-                    <span className="bl-mob-emoji">{fullCat.emoji}</span>
-                    <div className="bl-mob-name">{fullCat.name}</div>
+                  <div style={{ position:"absolute", inset:0, background: fullCat.grad, opacity: fullCat.imageUrl ? 0 : 1, transition:"opacity .3s" }} />
+                  <div className="bl-ch-ov" />
+                  <div className="bl-ch-lbl">
+                    <span className="bl-ch-em">{fullCat.emoji}</span>
+                    <div className="bl-ch-nm">{fullCat.name}</div>
                   </div>
                 </div>
-
-                {/* Right column: easy(1) + medium(1) + hard(1) */}
-                <div className="bl-mob-col">
-                  {diffs.map(d => renderMobCell(cat.id, d, 1))}
-                </div>
+                {VALUE_ROWS.map(([d, slot]) => renderCell(cat.id, d, slot))}
               </div>
             );
           })}
