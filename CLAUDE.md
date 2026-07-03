@@ -25,6 +25,7 @@ src/
   components/          # one file per screen (Login/Signup/Splash/Setup/CategoryPicker/Board/End/History)
   data/                # category definitions
     categories.ts        # local question banks (hardcoded Arabic Q&A) + POINTS/DIFF maps
+    aiCategories.ts      # "Made by AI" question banks (Arabic, media via imageUrl/audioUrl/videoUrl)
     apiCategories.ts     # the-trivia-api category metadata
     opentdbCategories.ts # OpenTDB category metadata
   styles/globalStyles.ts # injected global CSS (fonts, vars)
@@ -45,8 +46,10 @@ server/
   board → end`, plus `history`. Auth gates everything; unauthenticated users see
   login/signup only.
 - **Category sources** (`Category.source`): `"local"` (banks in `data/categories.ts`),
-  `"api"` (the-trivia-api), `"opentdb"`. API questions are fetched per-cell at play time via
-  `POST /game/fetch-questions`, server-side, then cached on the session doc.
+  `"ai"` (AI-written banks in `data/aiCategories.ts`, behaves like local), `"api"`
+  (the-trivia-api), `"opentdb"`, `"islamic"` (server-local bank). API questions are fetched
+  per-cell at play time via `POST /game/fetch-questions`, server-side, then cached on the
+  session doc.
 - **Game state lives server-side** on the `GameSession` doc: `scores`, `currentTeam`,
   `questionsUsed` (per-category list of seen question texts, prevents repeats),
   `apiQuestions` cache, `status` (`active`/`completed`). A session is created with exactly

@@ -4,6 +4,7 @@ import { CATEGORIES, DIFF_COLOR, DIFF_LABEL, POINTS } from "../data/categories";
 import { API_CATEGORIES } from "../data/apiCategories";
 import { OPENTDB_CATEGORIES } from "../data/opentdbCategories";
 import { ISLAMIC_CATEGORIES } from "../data/islamicCategories";
+import { AI_CATEGORIES } from "../data/aiCategories";
 import { createGameSession, fetchQuestions, markQuestionUsed, updateScore, endSession } from "../services/gameApi";
 import { useAuth } from "../context/AuthContext";
 
@@ -289,6 +290,13 @@ const CSS = `
     aspect-ratio:16/9; background:rgba(0,0,0,0.25);
   }
   .bl-q-img img { width:100%; height:100%; object-fit:contain; }
+  .bl-q-img video { width:100%; height:100%; object-fit:contain; }
+  .bl-q-audio {
+    margin:0 auto 14px; width:100%; max-width:420px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:10px 12px;
+  }
+  .bl-q-audio audio { width:100%; display:block; }
   .bl-rev-btn {
     width:100%; padding:16px; border:none; border-radius:14px;
     background:linear-gradient(135deg,#1f2a44,#111827); color:#fff;
@@ -322,8 +330,9 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
       for (const cat of config.sharedCats) {
         pools[cat.id] = { easy: [], medium: [], hard: [] };
 
-        if (cat.source === "local") {
-          const localCat = CATEGORIES.find(c => c.id === cat.id);
+        if (cat.source === "local" || cat.source === "ai") {
+          const bank = cat.source === "local" ? CATEGORIES : AI_CATEGORIES;
+          const localCat = bank.find(c => c.id === cat.id);
           if (!localCat?.questions) continue;
           (["easy", "medium", "hard"] as Difficulty[]).forEach(diff => {
             const qs = localCat.questions!.filter(q => q.difficulty === diff);
@@ -357,6 +366,7 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
     if (cat.source === "local") return CATEGORIES.find(c => c.id === cat.id);
     if (cat.source === "opentdb") return OPENTDB_CATEGORIES.find(c => c.id === cat.id);
     if (cat.source === "islamic") return ISLAMIC_CATEGORIES.find(c => c.id === cat.id);
+    if (cat.source === "ai") return AI_CATEGORIES.find(c => c.id === cat.id);
     return API_CATEGORIES.find(c => c.id === cat.id);
   };
 
@@ -383,6 +393,8 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
   const [doubleActive, setDoubleActive]         = useState(false);
   const [twoAnswersActive, setTwoAnswersActive] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const timerRef = useRef<number | undefined>(undefined);
 
   const tk        = currentTeam === 1 ? "team1" : "team2";
@@ -528,6 +540,8 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
     setDoubleActive(false);
     setTwoAnswersActive(false);
     setImageSrc(picked.imageUrl ? normalizeImageUrl(picked.imageUrl) : null);
+    setAudioSrc(picked.audioUrl || null);
+    setVideoSrc(picked.videoUrl || null);
     setPhase("question");
     setTimerActive(true);
   };
@@ -808,9 +822,19 @@ export default function BoardScreen({ config, onEnd }: { config: GameConfig; onE
 
             <div style={{ fontSize:11, color:"var(--muted)", textAlign:"center", marginBottom:10 }}>{teamName} — أجب عن السؤال</div>
 
-            {imageSrc && (
+            {videoSrc ? (
+              <div className="bl-q-img">
+                <video src={videoSrc} controls playsInline onError={() => setVideoSrc(null)} />
+              </div>
+            ) : imageSrc && (
               <div className="bl-q-img">
                 <img src={imageSrc} alt="سؤال" onError={() => setImageSrc(null)} />
+              </div>
+            )}
+
+            {audioSrc && (
+              <div className="bl-q-audio">
+                <audio src={audioSrc} controls onError={() => setAudioSrc(null)} />
               </div>
             )}
 

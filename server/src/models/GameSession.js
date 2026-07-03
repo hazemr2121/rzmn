@@ -10,7 +10,7 @@ const gameSessionSchema = new mongoose.Schema({
   team2: { type: String, required: true },
   categories: [{
     id: String,
-    source: { type: String, enum: ['local', 'api', 'opentdb', 'islamic'], required: true },
+    source: { type: String, enum: ['local', 'api', 'opentdb', 'islamic', 'ai'], required: true },
     name: String,
     apiCategory: String,
     apiCategoryId: Number,

@@ -6,6 +6,8 @@ export interface Question {
   a: string;
   difficulty: Difficulty;
   imageUrl?: string;
+  audioUrl?: string;
+  videoUrl?: string;
 }
 
 export interface Category {
@@ -14,7 +16,7 @@ export interface Category {
   emoji: string;
   grad: string;
   imageUrl?: string;
-  source: "local" | "api" | "opentdb" | "islamic";
+  source: "local" | "api" | "opentdb" | "islamic" | "ai";
   apiCategory?: string;
   apiCategoryId?: number;
   questions?: Question[];
@@ -22,7 +24,7 @@ export interface Category {
 
 export interface SelectedCategory {
   id: string;
-  source: "local" | "api" | "opentdb" | "islamic";
+  source: "local" | "api" | "opentdb" | "islamic" | "ai";
   name: string;
   apiCategory?: string;
   apiCategoryId?: number;
