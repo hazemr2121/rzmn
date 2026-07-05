@@ -471,7 +471,7 @@ export const CATEGORIES: Category[] = [
       { q: "مين أول أديب عربي يفوز بجائزة نوبل للأدب؟", a: "نجيب محفوظ", difficulty: "easy" },
       { q: "مين لقبه 'ملك البوب'؟", a: "مايكل جاكسون", difficulty: "easy" },
       { q: "مين غنى 'يا مسافر وحدك'؟", a: "محمد فوزي", difficulty: "easy" },
-      { q: "مين غنى 'حبيبي يا نور العين'؟", a: "وائل كفوري", difficulty: "easy" },
+      { q: "مين غنى 'حبيبي يا نور العين'؟", a: "عمرو دياب", difficulty: "easy" },
       { q: "أم كلثوم لقبها إيه؟", a: "كوكب الشرق", difficulty: "easy" },
       { q: "مين رسم لوحة 'الصرخة' الشهيرة؟", a: "إدفارد مونك", difficulty: "easy", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_Scream.jpg/800px-The_Scream.jpg" },
       { q: "مين غنى 'سيدي منصور'؟", a: "لطفي بوشناق", difficulty: "easy" },
