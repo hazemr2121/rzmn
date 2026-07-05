@@ -4,8 +4,9 @@ import { CATEGORIES } from "../data/categories";
 import { API_CATEGORIES } from "../data/apiCategories";
 import { OPENTDB_CATEGORIES } from "../data/opentdbCategories";
 import { ISLAMIC_CATEGORIES } from "../data/islamicCategories";
+import { AI_CATEGORIES } from "../data/aiCategories";
 
-type Tab = "arabic" | "api" | "opentdb" | "islamic";
+type Tab = "arabic" | "api" | "opentdb" | "islamic" | "ai";
 
 export default function CategoryPicker({ config, onDone }: { config: GameConfig; onDone: (cats: SelectedCategory[]) => void }) {
   const [tab, setTab] = useState<Tab>("arabic");
@@ -15,7 +16,8 @@ export default function CategoryPicker({ config, onDone }: { config: GameConfig;
     tab === "arabic" ? CATEGORIES :
     tab === "api" ? API_CATEGORIES :
     tab === "opentdb" ? OPENTDB_CATEGORIES :
-    ISLAMIC_CATEGORIES;
+    tab === "islamic" ? ISLAMIC_CATEGORIES :
+    AI_CATEGORIES;
 
   const toggle = (cat: (typeof CATEGORIES)[0]) => {
     setSelected((prev) => {
@@ -76,6 +78,7 @@ export default function CategoryPicker({ config, onDone }: { config: GameConfig;
           <button style={tabStyle("api")} onClick={() => setTab("api")}>🌍 Trivia API</button>
           <button style={tabStyle("opentdb")} onClick={() => setTab("opentdb")}>🎯 OpenTDB</button>
           <button style={tabStyle("islamic")} onClick={() => setTab("islamic")}>🕌 إسلامي</button>
+          <button style={tabStyle("ai")} onClick={() => setTab("ai")}>🤖 Made by AI</button>
         </div>
 
         <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 4 }}>
